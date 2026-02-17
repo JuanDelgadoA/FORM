@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Registro - Estilo Google Forms</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- VARIABLES Y RESET --- */
+        :root {
+            --primary-color: #673AB7; /* Morado Google Forms */
+            --primary-light: #F0EBF8;
+            --bg-color: #F0EBF8;
+            --surface-color: #ffffff;
+            --text-color: #202124;
+            --text-secondary: #5f6368;
+            --error-color: #d93025;
+            --border-color: #dadce0;
+            --shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            --radius: 8px;
+            --font-family: 'Roboto', sans-serif;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.5;
+            display: flex;
+            justify-content: center;
+            padding: 20px 10px;
+            min-height: 100vh;
+        }
+
+        /* --- CONTENEDOR PRINCIPAL --- */
+        .container {
+            width: 100%;
+            max-width: 640px;
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- TARJETAS (ESTILO GOOGLE) --- */
+        .card {
+            background: var(--surface-color);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 12px;
+            padding: 24px;
+            border: 1px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        /* Header del formulario */
+        .header-card {
+            border-top: 10px solid var(--primary-color);
+            border-top-left-radius: var(--radius);
+            border-top-right-radius: var(--radius);
+        }
+
+        .form-title {
+            font-size: 32px;
+            font-weight: 400;
+            margin-bottom: 10px;
+            color: #000;
+        }
+
+        .form-desc {
+            font-size: 14px;
+            color: var(--text-secondary);
+            margin-bottom: 10px;
+        }
+
+        .required-note {
+            color: var(--error-color);
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        /* --- CAMPOS DEL FORMULARIO --- */
+        .form-group {
+            margin-bottom: 0; /* Controlado por el padding de la tarjeta */
+        }
+
+        label {
+            display: block;
+            font-size: 16px;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: var(--text-color);
+        }
+
+        .required-asterisk {
+            color: var(--error-color);
+            margin-left: 4px;
+        }
+
+        /* Inputs de Texto, Email, Número, Select */
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 10px 0;
+            font-family: var(--font-family);
+            font-size: 14px;
+            border: none;
+            border-bottom: 1px solid var(--border-color);
+            background-color: transparent;
+            outline: none;
+            transition: border-bottom-color 0.3s ease, background-color 0.2s;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            border-bottom: 2px solid var(--primary-color);
+            background-color: #fafafa;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 40px;
+        }
+
+        /* Select personalizado */
+        select {
+            cursor: pointer;
+            color: var(--text-color);
+        }
+
+        /* Radio Buttons y Checkboxes */
+        .option-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 10px;
+        }
+
+        .option-item {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: var(--text-secondary);
+            cursor: pointer;
+        }
+
+        .option-item input {
+            margin-right: 12px;
+            accent-color: var(--primary-color);
+            transform: scale(1.2);
+            cursor: pointer;
+        }
+
+        /* --- VALIDACIÓN Y ERRORES --- */
+        .error-message {
+            color: var(--error-color);
+            font-size: 12px;
+            margin-top: 6px;
+            display: flex;
+            align-items: center;
+            opacity: 0;
+            transform: translateY(-5px);
+            transition: all 0.3s;
+            height: 0;
+            overflow: hidden;
+        }
+
+        .error-message svg {
+            margin-right: 5px;
+            fill: var(--error-color);
+        }
+
+        /* Estado de error activo */
+        .form-group.error input,
+        .form-group.error select,
+        .form-group.error textarea {
+            border-bottom-color: var(--error-color);
+        }
+
+        .form-group.error .error-message {
+            opacity: 1;
+            transform: translateY(0);
+            height: auto;
+            margin-top: 8px;
+        }
+
+        /* --- BOTÓN DE ENVIAR --- */
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+
+        .btn-submit {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 10px 24px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        .btn-submit:hover {
+            background-color: #58319e;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .btn-submit:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        /* Barra de progreso (simulación) */
+        .progress-bar {
+            height: 4px;
+            background-color: #e0e0e0;
+            width: 100%;
+            margin-bottom: 20px;
+            border-radius: 2px;
+            overflow: hidden;
+            display: none;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background-color: var(--primary-color);
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        /* --- PANTALLA DE ÉXITO --- */
+        .success-screen {
+            display: none;
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .success-icon {
+            color: var(--primary-color);
+            font-size: 48px;
+            margin-bottom: 20px;
+        }
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 600px) {
+            .form-title { font-size: 24px; }
+            .card { padding: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <form id="mainForm" novalidate>
+            
+            <div class="card header-card">
+                <h1 class="form-title">Formulario de Inscripción</h1>
+                <p class="form-desc">Complete el siguiente formulario para registrar su participación. Todos los datos serán tratados con confidencialidad.</p>
+                <div class="required-note">* Indica que la pregunta es obligatoria</div>
+            </div>
+
+            <div class="card form-group" id="group-nombre">
+                <label for="nombre">Nombre completo <span class="required-asterisk">*</span></label>
+                <input type="text" id="nombre" name="nombre" placeholder="Tu respuesta" required>
+                <div class="error-message">
+                    <svg height="20" width="20" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                    Este campo es obligatorio
+                </div>
+            </div>
+
+            <div class="card form-group" id="group-email">
+                <label for="email">Correo electrónico <span class="required-asterisk">*</span></label>
+                <input type="email" id="email" name="email" placeholder="Tu respuesta" required>
+                <div class="error-message">
+                    <svg height="20" width="20" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                    Introduce un email válido
+                </div>
+            </div>
+
+            <div class="card form-group" id="group-edad">
+                <label for="edad">Edad</label>
+                <input type="number" id="edad" name="edad" placeholder="Tu respuesta" min="18" max="99">
+                <div class="error-message">
+                    <svg height="20" width="20" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                    Debes ser mayor de 18 años
+                </div>
+            </div>
+
+            <div class="card form-group" id="group-depto">
+                <label for="departamento">Departamento / Área <span class="required-asterisk">*</span></label>
+                <select id="departamento" name="departamento" required>
+                    <option value="" disabled selected>Elige una opción</option>
+                    <option value="ventas">Ventas</option>
+                    <option value="marketing">Marketing</option>
+                    <option value="desarrollo">Desarrollo</option>
+                    <option value="rh">Recursos Humanos</option>
+                </select>
+                <div class="error-message">
+                    <svg height="20" width="20" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                    Por favor selecciona un área
+                </div>
+            </div>
+
+            <div class="card form-group" id="group-modalidad">
+                <label>Modalidad de asistencia <span class="required-asterisk">*</span></label>
+                <div class="option-group">
+                    <label class="option-item">
+                        <input type="radio" name="modalidad" value="presencial" required>
+                        Presencial
+                    </label>
+                    <label class="option-item">
+                        <input type="radio" name="modalidad" value="remoto">
+                        Remoto (Online)
+                    </label>
+                    <label class="option-item">
+                        <input type="radio" name="modalidad" value="hibrido">
+                        Híbrido
+                    </label>
+                </div>
+                <div class="error-message">
+                    <svg height="20" width="20" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                    Selecciona una opción
+                </div>
+            </div>
+
+            <div class="card form-group" id="group-intereses">
+                <label>Temas de interés (Selecciona al menos uno) <span class="required-asterisk">*</span></label>
+                <div class="option-group">
+                    <label class="option-item">
+                        <input type="checkbox" name="intereses" value="tecnologia">
+                        Tecnología e Innovación
+                    </label>
+                    <label class="option-item">
+                        <input type="checkbox" name="intereses" value="gestion">
+                        Gestión de Proyectos
+                    </label>
+                    <label class="option-item">
+                        <input type="checkbox" name="intereses" value="liderazgo">
+                        Liderazgo
+                    </label>
+                </div>
+                <div class="error-message">
+                    <svg height="20" width="20" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>
+                    Selecciona al menos un interés
+                </div>
+            </div>
+
+            <div class="card form-group" id="group-comentarios">
+                <label for="comentarios">Comentarios adicionales</label>
+                <textarea id="comentarios" name="comentarios" placeholder="Tu respuesta"></textarea>
+            </div>
+
+            <div class="actions">
+                <button type="submit" class="btn-submit" id="btnSubmit">Enviar</button>
+                <div style="font-size: 12px; color: #5f6368;">Nunca envíes contraseñas a través de Formularios de Google.</div>
+            </div>
+
+        </form>
+
+        <div id="successMessage" class="card success-screen">
+            <div class="header-card" style="margin: -24px -24px 20px -24px; height: 10px; border-radius: 8px 8px 0 0;"></div>
+            <h2 style="margin-bottom: 10px;">Se ha registrado tu respuesta.</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 20px;">Gracias por completar el formulario.</p>
+            <a href="#" onclick="location.reload()" style="color: var(--primary-color); text-decoration: none; font-size: 14px;">Enviar otra respuesta</a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('mainForm');
+            const successDiv = document.getElementById('successMessage');
+            const submitBtn = document.getElementById('btnSubmit');
+
+            // Función para mostrar error
+            const showError = (element, message) => {
+                const formGroup = element.closest('.form-group');
+                formGroup.classList.add('error');
+                const errorDiv = formGroup.querySelector('.error-message');
+                if (errorDiv) {
+                    // Mantenemos el icono SVG y actualizamos el texto si es necesario
+                    const svg = errorDiv.querySelector('svg');
+                    errorDiv.innerHTML = '';
+                    errorDiv.appendChild(svg);
+                    errorDiv.appendChild(document.createTextNode(' ' + message));
+                }
+            };
+
+            // Función para limpiar error
+            const clearError = (element) => {
+                const formGroup = element.closest('.form-group');
+                formGroup.classList.remove('error');
+            };
+
+            // Validar un campo individual
+            const validateField = (input) => {
+                const type = input.type;
+                const name = input.name;
+                const value = input.value.trim();
+                let isValid = true;
+
+                clearError(input);
+
+                // 1. Validar requeridos (Text, Email, Select, Textarea)
+                if (input.hasAttribute('required') && !value && type !== 'radio' && type !== 'checkbox') {
+                    showError(input, 'Esta pregunta es obligatoria');
+                    isValid = false;
+                }
+
+                // 2. Validar Email
+                if (type === 'email' && value) {
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(value)) {
+                        showError(input, 'Introduce un correo electrónico válido');
+                        isValid = false;
+                    }
+                }
+
+                // 3. Validar Número
+                if (type === 'number' && value) {
+                    if (value < 18) {
+                        showError(input, 'Debes ser mayor de 18 años');
+                        isValid = false;
+                    }
+                }
+
+                return isValid;
+            };
+
+            // Validar grupos de Radio buttons
+            const validateRadioGroup = (name) => {
+                const radios = document.querySelectorAll(`input[name="${name}"]`);
+                const groupContainer = radios[0].closest('.form-group');
+                const isRequired = radios[0].hasAttribute('required');
+                
+                if (!isRequired) return true;
+
+                let checked = false;
+                radios.forEach(r => { if (r.checked) checked = true; });
+
+                if (!checked) {
+                    groupContainer.classList.add('error');
+                    return false;
+                } else {
+                    groupContainer.classList.remove('error');
+                    return true;
+                }
+            };
+
+            // Validar Checkboxes (Lógica custom: al menos 1 seleccionado si el grupo es requerido)
+            // Nota: HTML5 no tiene "required" nativo para "al menos uno de muchos", se hace manual.
+            const validateCheckboxGroup = (name) => {
+                const checkboxes = document.querySelectorAll(`input[name="${name}"]`);
+                const groupContainer = checkboxes[0].closest('.form-group');
+                
+                // Asumimos requerido para este ejemplo específico
+                let checkedCount = 0;
+                checkboxes.forEach(c => { if (c.checked) checkedCount++; });
+
+                if (checkedCount === 0) {
+                    groupContainer.classList.add('error');
+                    return false;
+                } else {
+                    groupContainer.classList.remove('error');
+                    return true;
+                }
+            };
+
+            // Limpiar errores en tiempo real al escribir/cambiar
+            form.addEventListener('input', (e) => {
+                if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.tagName === 'SELECT') {
+                    if (e.target.type === 'radio') {
+                        const groupName = e.target.name;
+                        const groupContainer = e.target.closest('.form-group');
+                        groupContainer.classList.remove('error');
+                    } else if (e.target.type === 'checkbox') {
+                         const groupContainer = e.target.closest('.form-group');
+                         groupContainer.classList.remove('error');
+                    } else {
+                        clearError(e.target);
+                    }
+                }
+            });
+
+            // Manejar Envío
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                let isFormValid = true;
+
+                // 1. Validar inputs simples y selects
+                const inputs = form.querySelectorAll('input:not([type="radio"]):not([type="checkbox"]), select, textarea');
+                inputs.forEach(input => {
+                    if (!validateField(input)) isFormValid = false;
+                });
+
+                // 2. Validar Radios (Modalidad)
+                if (!validateRadioGroup('modalidad')) isFormValid = false;
+
+                // 3. Validar Checkboxes (Intereses)
+                if (!validateCheckboxGroup('intereses')) isFormValid = false;
+
+                // Si hay errores, scrollear al primero
+                if (!isFormValid) {
+                    const firstError = document.querySelector('.form-group.error');
+                    if (firstError) {
+                        firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                    return;
+                }
+
+                // Simular envío
+                const originalBtnText = submitBtn.textContent;
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Enviando...';
+
+                setTimeout(() => {
+                    // Éxito
+                    form.style.display = 'none';
+                    successDiv.style.display = 'block';
+                    
+                    // Resetear formulario (opcional)
+                    form.reset();
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalBtnText;
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }, 1500); // 1.5 segundos de delay simulado
+            });
+        });
+    </script>
+</body>
+</html>
